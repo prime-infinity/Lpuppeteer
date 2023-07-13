@@ -4,7 +4,7 @@ import puppeteer from "puppeteer";
 
   const browser = await puppeteer.launch({
     headless: false,
-    //slowMo:100
+    slowMo: 100,
   });
   const page = await browser.newPage();
   await page.goto("https://google.com");
