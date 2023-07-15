@@ -1,4 +1,4 @@
-//template
+//real scrapping
 import puppeteer from "puppeteer-core";
 
 const auth = "brd-customer-hl_bd3d661c-zone-scraping_browserrr:b97era99nx6d";
@@ -11,10 +11,20 @@ async function run() {
     });
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(2 * 60 * 1000);
-    await page.goto("http://lumtest.com/myip.json");
-    // Extract the text within the <body></body> tag
-    const text = await page.$eval("body", (element) => element.textContent);
-    console.log(text.trim()); // Output the extracted text
+
+    console.log("going to page");
+    await page.goto(
+      "https://twitter.com/i/flow/login?redirect_after_login=%2F"
+    );
+    console.log("in twitter page");
+
+    console.log("waiting for input to show in dom");
+    await page.waitForSelector('input[name="text"]');
+    console.log("input visible");
+
+    console.log("typing number in input box");
+    await page.type('input[name="text"]', "08118450863");
+    console.log("done typing");
   } catch (e) {
     console.log("scrapping failed:", e);
   } finally {
