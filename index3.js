@@ -8,6 +8,8 @@ async function run() {
   try {
     browser = await puppeteer.connect({
       browserWSEndpoint: `wss://${auth}@brd.superproxy.io:9222`,
+      defaultViewport: null,
+      args: ["--start-maximized"],
     });
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(2 * 60 * 1000);
