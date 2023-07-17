@@ -13,8 +13,8 @@ import puppeteer from "puppeteer";
   page.setDefaultNavigationTimeout(2 * 60 * 1000);
 
   console.log("going to page");
-  await page.goto("https://twitter.com/i/flow/login?redirect_after_login=%2F");
-  console.log("in twitter page");
+  await page.goto(`https://twitter.com/${stringName}`);
+  console.log(`Navigating to Twitter profile: ${stringName}`);
 
   console.log("waiting for input to show in dom");
   await page.waitForSelector('input[name="text"]');
@@ -54,45 +54,6 @@ import puppeteer from "puppeteer";
   console.log("clicked login button");
 
   //login successfull
-  console.log("looking for search box");
-  await page.waitForSelector('input[data-testid="SearchBox_Search_Input"]');
-  const searchInput = await page.$(
-    'input[data-testid="SearchBox_Search_Input"]'
-  );
-  console.log("typing in search box");
-  await searchInput.type(stringName);
-  await page.keyboard.press("Enter");
-  console.log("Pressed enter, searchign");
-
-  //click on the "people" tag
-  console.log("searching for the people div");
-  const divSelector = 'div[role="presentation"] a[href*="f=user"]';
-  await page.waitForSelector(divSelector);
-  console.log("seen the people div");
-  await page.click(divSelector);
-  console.log("clicked the people div");
-
-  //check for the username after clicking the people tab
-  console.log("looking for stringname link to click");
-  const userCellSelector = `div[role="button"][data-testid="UserCell"]`;
-
-  await page.waitForSelector(`${userCellSelector} span[role="link"]`);
-  const userCells = await page.$$(userCellSelector);
-
-  console.log("seen link name");
-  console.log("clicking on link name");
-  for (const userCell of userCells) {
-    const userNameElement = await userCell.$('span[role="link"]');
-    const userName = await page.evaluate(
-      (element) => element.textContent,
-      userNameElement
-    );
-
-    if (userName === stringName) {
-      await userCell.click();
-      break;
-    }
-  }
 
   //await browser.close();
   console.log("working");
