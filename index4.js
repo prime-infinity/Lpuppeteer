@@ -52,9 +52,43 @@ import puppeteer from "puppeteer";
   console.log("clicking login button");
   await page.click('div[data-testid="LoginForm_Login_Button"]');
   console.log("clicked login button");
+  console.log("login successfull, in profile");
 
-  //login successfull
+  //trying to scrape from network response
+  // Wait for the network response containing user data
+  await page.waitForResponse((response) =>
+    response.url().includes("/graphql/xc8f1g7BYqr6VTzTbvNlGw/UserByScreenName")
+  );
+  console.log("waiting for the network response");
+  // Get the network response
+  const responses = await page.waitForResponse(
+    (response) => {
+      const url = response.url();
+      const method = response.request().method();
+      console.log("Checking response:", url, method);
 
+      const isMatchingUrl = url.includes(
+        "/graphql/xc8f1g7BYqr6VTzTbvNlGw/UserByScreenName"
+      );
+      const isPostMethod = method === "GET";
+
+      console.log("Is matching URL:", isMatchingUrl);
+      console.log("Is POST method:", isPostMethod);
+
+      return isMatchingUrl && isPostMethod;
+    },
+    { timeout: 30000000 }
+  );
+
+  console.log("Network response received.");
+  //const responseJson = await responses.json();
+
+  // Extract the follower count from the response
+  /*const followersCount =
+    responseJson?.data?.user?.result?.legacy?.followers_count || 0;
+
+  console.log("Followers count: ", followersCount);
+  console.log(responseJson);*/
   //await browser.close();
   console.log("working");
 })();
