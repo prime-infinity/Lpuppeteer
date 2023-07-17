@@ -55,13 +55,53 @@ import puppeteer from "puppeteer";
   console.log("login successfull, in profile");
 
   //trying to scrape from network response
+
+  await page.setRequestInterception(true);
+
+  page.on("request", (request) => {
+    const resourceType = request.resourceType();
+    console.log("Request - Resource type:", resourceType);
+
+    if (resourceType === "xhr" || resourceType === "fetch") {
+      console.log("Request - URL:", request.url());
+      console.log("Request - Method:", request.method());
+    }
+
+    request.continue();
+  });
+
+  page.on("response", (response) => {
+    const resourceType = response.request().resourceType();
+    console.log("Response - Resource type:", resourceType);
+
+    if (resourceType === "xhr" || resourceType === "fetch") {
+      console.log("Response - URL:", response.url());
+      console.log("Response - Status:", response.status());
+    }
+  });
+
   // Wait for the network response containing user data
-  await page.waitForResponse((response) =>
+  /*await page.waitForResponse((response) =>
     response.url().includes("/graphql/xc8f1g7BYqr6VTzTbvNlGw/UserByScreenName")
-  );
+  );*/
+
+  /*await page.waitForResponse((response) => {
+    const request = response.request();
+    console.log("request type:", request);
+    const resourceType = request.resourceType();
+    console.log("resource type:", resourceType);
+    return (
+      (resourceType === "xhr" || resourceType === "fetch") &&
+      response
+        .url()
+        .includes("/graphql/xc8f1g7BYqr6VTzTbvNlGw/UserByScreenName") &&
+      request.method() === "GET"
+    );
+  });*/
+
   console.log("waiting for the network response");
   // Get the network response
-  const responses = await page.waitForResponse(
+  /*const responses = await page.waitForResponse(
     (response) => {
       const url = response.url();
       const method = response.request().method();
@@ -77,8 +117,8 @@ import puppeteer from "puppeteer";
 
       return isMatchingUrl && isPostMethod;
     },
-    { timeout: 30000000 }
-  );
+    { timeout: 300000 }
+  );*/
 
   console.log("Network response received.");
   //const responseJson = await responses.json();
