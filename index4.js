@@ -55,51 +55,15 @@ import puppeteer from "puppeteer";
   console.log("login successfull, in profile");
 
   //trying to scrape from network response
-  /**
-   *
-   *
-   *
-   *
-   *
-   *
-   */
-  await page.setRequestInterception(true);
   const targetUrl = "/graphql/xc8f1g7BYqr6VTzTbvNlGw/UserByScreenName";
   let responseData = null;
 
-  // Intercept requests and responses
-  page.on("request", (request) => {
-    const resourceType = request.resourceType();
-    const url = request.url();
-    const method = request.method();
-    //console.log("Request - URL:", url);
-    //console.log("Request - Method:", method);
-    if (url.includes(targetUrl) && method === "GET") {
-      //console.log("Intercepting target request:", url);
-      request.continue();
-    } else {
-      //console.log("Blocking request:", url);
-      request.continue();
-    }
-  });
-
-  page.on("response", async (response) => {
-    const resourceType = response.request().resourceType();
-    const url = response.url();
-    //console.log("Response - URL:", url);
-    if (
-      url.includes(targetUrl) &&
-      (resourceType === "xhr" || resourceType === "fetch")
-    ) {
-      console.log("Intercepted target response:", url);
-      responseData = await response.json();
-    }
-  });
-
-  // Wait until the target response is captured
-  while (!responseData) {
-    await page.waitForTimeout(100); // Wait for 100ms before checking again
-  }
+  const response = await page.waitForResponse((response) =>
+    response.url().includes(targetUrl)
+  );
+  console.log("Network response received.");
+  // Get the JSON data from the response
+  responseData = await response.json();
 
   // Extract the follower count from the response
   const followersCount =
