@@ -4,7 +4,6 @@ import puppeteer from "puppeteer";
 
   const browser = await puppeteer.launch({
     headless: false,
-    slowMo: 100,
     defaultViewport: null,
     args: ["--start-maximized"],
   });
@@ -55,80 +54,62 @@ import puppeteer from "puppeteer";
   console.log("login successfull, in profile");
 
   //trying to scrape from network response
+  /**
+   *
+   *
+   *
+   *
+   *
+   *
+   */
+  /*await page.setRequestInterception(true);
+  const targetUrl = "/graphql/xc8f1g7BYqr6VTzTbvNlGw/UserByScreenName";
+  let responseData = null;
 
-  await page.setRequestInterception(true);
-
-  page.on("request", (request) => {
+  // Intercept requests and responses
+  /*page.on("request", (request) => {
     const resourceType = request.resourceType();
-    console.log("Request - Resource type:", resourceType);
-
-    if (resourceType === "xhr" || resourceType === "fetch") {
-      console.log("Request - URL:", request.url());
-      console.log("Request - Method:", request.method());
+    const url = request.url();
+    const method = request.method();
+    console.log("Request - URL:", url);
+    console.log("Request - Method:", method);
+    if (url.includes(targetUrl) && method === "GET") {
+      console.log("Intercepting target request:", url);
+      request.continue();
+    } else {
+      console.log("Blocking request:", url);
+      //request.abort();
     }
-
-    request.continue();
   });
 
-  page.on("response", (response) => {
+  /*page.on("response", async (response) => {
     const resourceType = response.request().resourceType();
-    console.log("Response - Resource type:", resourceType);
-
-    if (resourceType === "xhr" || resourceType === "fetch") {
-      console.log("Response - URL:", response.url());
-      console.log("Response - Status:", response.status());
+    const url = response.url();
+    console.log("Response - URL:", url);
+    if (
+      url.includes(targetUrl) &&
+      (resourceType === "xhr" || resourceType === "fetch")
+    ) {
+      console.log("Intercepted target response:", url);
+      responseData = await response.json();
     }
-  });
-
-  // Wait for the network response containing user data
-  /*await page.waitForResponse((response) =>
-    response.url().includes("/graphql/xc8f1g7BYqr6VTzTbvNlGw/UserByScreenName")
-  );*/
-
-  /*await page.waitForResponse((response) => {
-    const request = response.request();
-    console.log("request type:", request);
-    const resourceType = request.resourceType();
-    console.log("resource type:", resourceType);
-    return (
-      (resourceType === "xhr" || resourceType === "fetch") &&
-      response
-        .url()
-        .includes("/graphql/xc8f1g7BYqr6VTzTbvNlGw/UserByScreenName") &&
-      request.method() === "GET"
-    );
   });*/
 
-  console.log("waiting for the network response");
-  // Get the network response
-  /*const responses = await page.waitForResponse(
-    (response) => {
-      const url = response.url();
-      const method = response.request().method();
-      console.log("Checking response:", url, method);
-
-      const isMatchingUrl = url.includes(
-        "/graphql/xc8f1g7BYqr6VTzTbvNlGw/UserByScreenName"
-      );
-      const isPostMethod = method === "GET";
-
-      console.log("Is matching URL:", isMatchingUrl);
-      console.log("Is POST method:", isPostMethod);
-
-      return isMatchingUrl && isPostMethod;
-    },
-    { timeout: 300000 }
-  );*/
-
-  console.log("Network response received.");
-  //const responseJson = await responses.json();
+  // Wait until the target response is captured
+  /*while (!responseData) {
+    await page.waitForTimeout(100); // Wait for 100ms before checking again
+  }*/
 
   // Extract the follower count from the response
   /*const followersCount =
-    responseJson?.data?.user?.result?.legacy?.followers_count || 0;
+    responseData?.data?.user?.result?.legacy?.followers_count || 0;
 
-  console.log("Followers count: ", followersCount);
-  console.log(responseJson);*/
+  console.log("Followers count: ", followersCount);*/
+
+  console.log("waiting for the network response");
+
+  console.log("Network response received.");
+
   //await browser.close();
   console.log("working");
 })();
