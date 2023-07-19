@@ -8,7 +8,7 @@ import puppeteer from "puppeteer";
     defaultViewport: null,
     args: ["--start-maximized"],
   });
-  let stringName = "@infinity_prime";
+  let stringName = "infinity_prime";
   const page = await browser.newPage();
   page.setDefaultNavigationTimeout(2 * 60 * 1000);
 
@@ -61,16 +61,21 @@ import puppeteer from "puppeteer";
   const response = await page.waitForResponse((response) =>
     response.url().includes(targetUrl)
   );
-  console.log("Network response received.");
+  console.log("Network response received");
   // Get the JSON data from the response
   responseData = await response.json();
-
+  console.log("gotten response,");
   // Extract the follower count from the response
   const followersCount =
     responseData?.data?.user?.result?.legacy?.followers_count || 0;
 
-  console.log("Followers count: ", followersCount);
-  console.log(responseData?.data?.user);
+  //console.log("Followers count: ", followersCount);
+  //console.log(responseData?.data?.user);
+
+  /**
+   * now, to scrape the followers
+   */
+
   //await browser.close();
   console.log("working");
 })();
