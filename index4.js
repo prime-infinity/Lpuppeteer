@@ -4,6 +4,7 @@ import puppeteer from "puppeteer";
 
   const browser = await puppeteer.launch({
     headless: false,
+    slowMo: 50,
     defaultViewport: null,
     args: ["--start-maximized"],
   });
@@ -62,30 +63,30 @@ import puppeteer from "puppeteer";
    *
    *
    */
-  /*await page.setRequestInterception(true);
+  await page.setRequestInterception(true);
   const targetUrl = "/graphql/xc8f1g7BYqr6VTzTbvNlGw/UserByScreenName";
   let responseData = null;
 
   // Intercept requests and responses
-  /*page.on("request", (request) => {
+  page.on("request", (request) => {
     const resourceType = request.resourceType();
     const url = request.url();
     const method = request.method();
-    console.log("Request - URL:", url);
-    console.log("Request - Method:", method);
+    //console.log("Request - URL:", url);
+    //console.log("Request - Method:", method);
     if (url.includes(targetUrl) && method === "GET") {
-      console.log("Intercepting target request:", url);
+      //console.log("Intercepting target request:", url);
       request.continue();
     } else {
-      console.log("Blocking request:", url);
-      //request.abort();
+      //console.log("Blocking request:", url);
+      request.continue();
     }
   });
 
-  /*page.on("response", async (response) => {
+  page.on("response", async (response) => {
     const resourceType = response.request().resourceType();
     const url = response.url();
-    console.log("Response - URL:", url);
+    //console.log("Response - URL:", url);
     if (
       url.includes(targetUrl) &&
       (resourceType === "xhr" || resourceType === "fetch")
@@ -93,23 +94,19 @@ import puppeteer from "puppeteer";
       console.log("Intercepted target response:", url);
       responseData = await response.json();
     }
-  });*/
+  });
 
   // Wait until the target response is captured
-  /*while (!responseData) {
+  while (!responseData) {
     await page.waitForTimeout(100); // Wait for 100ms before checking again
-  }*/
+  }
 
   // Extract the follower count from the response
-  /*const followersCount =
+  const followersCount =
     responseData?.data?.user?.result?.legacy?.followers_count || 0;
 
-  console.log("Followers count: ", followersCount);*/
-
-  console.log("waiting for the network response");
-
-  console.log("Network response received.");
-
+  console.log("Followers count: ", followersCount);
+  console.log(responseData?.data?.user);
   //await browser.close();
   console.log("working");
 })();
